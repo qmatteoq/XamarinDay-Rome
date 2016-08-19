@@ -114,7 +114,7 @@
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\TrackSeries.Services\TrackSeries.Core.csproj">
+    <ProjectReference Include="..\..\TrackSeries.Core\TrackSeries.Core.csproj">
       <Project>{f6346094-a64c-4fe8-b8ea-5ec617d94b85}</Project>
       <Name>TrackSeries.Core</Name>
     </ProjectReference>

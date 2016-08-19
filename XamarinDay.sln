@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackSeries.Droid", "TrackS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackSeries.UWP", "TrackSeries\TrackSeries.UWP\TrackSeries.UWP.csproj", "{196E7357-CA6D-4ECE-9D1A-F5A409B88040}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackSeries.Core", "TrackSeries.Services\TrackSeries.Core.csproj", "{F6346094-A64C-4FE8-B8EA-5EC617D94B85}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackSeries.Core", "TrackSeries.Core\TrackSeries.Core.csproj", "{F6346094-A64C-4FE8-B8EA-5EC617D94B85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -19,7 +19,7 @@ namespace TrackSeries.ViewModels
         {
             get { return _topSeries; }
             set { SetProperty(ref _topSeries, value); }
-        }
+        } 
 
         public MainPageViewModel(TsApiService apiService)
         {
