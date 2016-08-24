@@ -41,6 +41,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\BaseProvider.cs" />
     <Compile Include="Exceptions\TrackSeriesApiException.cs" />
     <Compile Include="Models\ActorVM.cs" />

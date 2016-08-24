@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:converters="clr-namespace:TrackSeries.Converters;assembly=TrackSeries"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             Title="{Binding Path=SelectedShow.Name}"
+             x:Class="TrackSeries.Views.DetailPage">
+  
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <converters:FavoriteLabelConverter x:Key="FavoriteConverter" />
+    </ResourceDictionary>
+  </ContentPage.Resources>
+
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="{Binding Path=IsFavoriteShow, Converter={StaticResource FavoriteConverter}}" 
+                 Command="{Binding Path=HandleFavoriteCommand}" Order="Secondary"/>
+  </ContentPage.ToolbarItems>
+
+  <StackLayout>
+    <Image x:Name="InfoPoster"
+           Source="{Binding Path=SelectedShow.Images.Fanart}" Aspect="AspectFill" />
+    <Label Text="{Binding Path=SelectedShow.Overview}" LineBreakMode="WordWrap" FontSize="13" TextColor="Black" Margin="15" />
+  </StackLayout>
+
+</ContentPage>

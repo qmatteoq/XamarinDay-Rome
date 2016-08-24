@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using TrackSeries.Core.Annotations;
 
 namespace TrackSeries.Core.Models
 {
-    public class SerieFollowersVM
+    public class SerieFollowersVM: INotifyPropertyChanged
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -25,5 +28,28 @@ namespace TrackSeries.Core.Models
         public DateTime Added { get; set; }
         public DateTime LastUpdated { get; set; }
         public string SlugName { get; set; }
+
+        private bool _isFavorite;
+
+        public bool IsFavorite
+        {
+            get { return _isFavorite; }
+            set
+            {
+                _isFavorite = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

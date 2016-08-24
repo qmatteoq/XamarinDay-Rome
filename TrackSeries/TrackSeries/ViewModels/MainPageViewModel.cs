@@ -5,25 +5,44 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using Prism.Events;
 using TrackSeries.Core.Models;
 using TrackSeries.Core.Services;
+using TrackSeries.Events;
+using TrackSeries.Services;
+using Xamarin.Forms;
 
 namespace TrackSeries.ViewModels
 {
     public class MainPageViewModel : BindableBase, INavigationAware
     {
         private readonly TsApiService _apiService;
+        private readonly INavigationService _navigationService;
+        private readonly IOfflineSyncService _offlineSyncService;
+        private readonly IEventAggregator _eventAggregator;
         private ObservableCollection<SerieFollowersVM> _topSeries;
 
         public ObservableCollection<SerieFollowersVM> TopSeries
         {
             get { return _topSeries; }
             set { SetProperty(ref _topSeries, value); }
-        } 
-          
-        public MainPageViewModel(TsApiService apiService)
+        }
+
+        public MainPageViewModel(TsApiService apiService, INavigationService navigationService,
+            IOfflineSyncService offlineSyncService,
+            IEventAggregator eventAggregator)
         {
             _apiService = apiService;
+            _navigationService = navigationService;
+            _offlineSyncService = offlineSyncService;
+            _eventAggregator = eventAggregator;
+
+            _eventAggregator.GetEvent<FavoriteChangedEvent>().Subscribe(trackSeriesId =>
+            {
+                var serie = TopSeries.FirstOrDefault(x => x.Id == trackSeriesId);
+                serie.IsFavorite = !serie.IsFavorite;
+            });
         }
 
         public void OnNavigatedFrom(NavigationParameters parameters)
@@ -33,8 +52,62 @@ namespace TrackSeries.ViewModels
 
         public async void OnNavigatedTo(NavigationParameters parameters)
         {
+            await _offlineSyncService.InitLocalStoreAsync();
+            await _offlineSyncService.SyncAsync();
+
+            await RefreshData();
+        }
+
+        private async Task RefreshData()
+        {
             var result = await _apiService.GetStatsTopSeries();
+            foreach (var serie in result)
+            {
+                serie.IsFavorite = await _offlineSyncService.IsShowFavorite(serie.Id);
+            }
+
+            TopSeries = new ObservableCollection<SerieFollowersVM>();
             TopSeries = new ObservableCollection<SerieFollowersVM>(result);
+        }
+
+        private DelegateCommand<ItemTappedEventArgs> _goToDetailPageCommand;
+
+        public DelegateCommand<ItemTappedEventArgs> GoToDetailPageCommand
+        {
+            get
+            {
+                if (_goToDetailPageCommand == null)
+                {
+                    _goToDetailPageCommand = new DelegateCommand<ItemTappedEventArgs>(async selected =>
+                    {
+                        NavigationParameters param = new NavigationParameters();
+                        var serie = selected.Item as SerieFollowersVM;
+                        param.Add("id", serie.Id);
+                        await _navigationService.NavigateAsync("DetailPage", param);
+                    });
+                }
+
+                return _goToDetailPageCommand;
+            }
+        }
+
+        private DelegateCommand _refreshCommand;
+
+        public DelegateCommand RefreshCommand
+        {
+            get
+            {
+                if (_refreshCommand == null)
+                {
+                    _refreshCommand = new DelegateCommand(async () =>
+                    {
+                        await _offlineSyncService.SyncAsync();
+                        await RefreshData();
+                    });
+                }
+
+                return _refreshCommand;
+            }
         }
     }
 }
