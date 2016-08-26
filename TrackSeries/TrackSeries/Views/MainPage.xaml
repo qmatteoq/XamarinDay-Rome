@@ -6,7 +6,7 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="TrackSeries.Views.MainPage"
              Title="Track Series">
-  
+
   <ContentPage.Resources>
     <ResourceDictionary>
       <DataTemplate x:Key="TopSeriesTemplate">
@@ -49,13 +49,16 @@
       </DataTemplate>
     </ResourceDictionary>
   </ContentPage.Resources>
-  
+
   <ContentPage.ToolbarItems>
     <ToolbarItem Icon="refresh.png" Command="{Binding Path=RefreshCommand}" />
   </ContentPage.ToolbarItems>
 
-  <ListView ItemTemplate="{StaticResource TopSeriesTemplate}"
+    <ListView ItemTemplate="{StaticResource TopSeriesTemplate}"
             ItemsSource="{Binding Path=TopSeries}" RowHeight="200" CachingStrategy="RecycleElement">
+
+    <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="50"
+                       IsRunning="{Binding Path=IsLoading}" IsVisible="{Binding Path=IsLoading}" />
 
     <behaviors:Interaction.Behaviors>
       <behaviors:BehaviorCollection>

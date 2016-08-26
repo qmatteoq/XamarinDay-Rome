@@ -8,6 +8,8 @@
 
         public bool IsFavorite { get; set; }
 
+        public string UserId { get; set; }
+
         public FavoriteShow(int trackSeriesId)
         {
             TrackSeriesId = trackSeriesId;

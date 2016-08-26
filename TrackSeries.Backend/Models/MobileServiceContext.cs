@@ -26,7 +26,7 @@ namespace TrackSeries.Backend.Models
         {
         }
 
-        public DbSet<TodoItem> TodoItems { get; set; }
+        public DbSet<FavoriteShow> FavoriteShows { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

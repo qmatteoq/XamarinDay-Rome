@@ -1,8 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +8,7 @@ using Prism.Events;
 using TrackSeries.Core.Models;
 using TrackSeries.Core.Services;
 using TrackSeries.Events;
+using TrackSeries.Models;
 using TrackSeries.Services;
 using Xamarin.Forms;
 
@@ -21,6 +20,7 @@ namespace TrackSeries.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IOfflineSyncService _offlineSyncService;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IAuthenticationService _authenticationService;
         private ObservableCollection<SerieFollowersVM> _topSeries;
 
         public ObservableCollection<SerieFollowersVM> TopSeries
@@ -29,14 +29,24 @@ namespace TrackSeries.ViewModels
             set { SetProperty(ref _topSeries, value); }
         }
 
+        private bool _isLoading;
+
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set { SetProperty(ref _isLoading, value); }
+        }
+
         public MainPageViewModel(TsApiService apiService, INavigationService navigationService,
             IOfflineSyncService offlineSyncService,
-            IEventAggregator eventAggregator)
+            IEventAggregator eventAggregator,
+            IAuthenticationService authenticationService)
         {
             _apiService = apiService;
             _navigationService = navigationService;
             _offlineSyncService = offlineSyncService;
             _eventAggregator = eventAggregator;
+            _authenticationService = authenticationService;
 
             _eventAggregator.GetEvent<FavoriteChangedEvent>().Subscribe(trackSeriesId =>
             {
@@ -52,14 +62,21 @@ namespace TrackSeries.ViewModels
 
         public async void OnNavigatedTo(NavigationParameters parameters)
         {
-            await _offlineSyncService.InitLocalStoreAsync();
-            await _offlineSyncService.SyncAsync();
-
-            await RefreshData();
+            IsLoading = true;
+            //var user = await _authenticationService.Authenticate(Constants.MobileAppUrl);
+            //bool isAuthenticated = _offlineSyncService.Authenticate(user);
+            //if (isAuthenticated)
+            //{
+                await _offlineSyncService.InitLocalStoreAsync();
+                await _offlineSyncService.SyncAsync();
+                await RefreshData();
+            //}
+            IsLoading = false;
         }
 
         private async Task RefreshData()
         {
+            IsLoading = true;
             var result = await _apiService.GetStatsTopSeries();
             foreach (var serie in result)
             {
@@ -68,6 +85,7 @@ namespace TrackSeries.ViewModels
 
             TopSeries = new ObservableCollection<SerieFollowersVM>();
             TopSeries = new ObservableCollection<SerieFollowersVM>(result);
+            IsLoading = false;
         }
 
         private DelegateCommand<ItemTappedEventArgs> _goToDetailPageCommand;

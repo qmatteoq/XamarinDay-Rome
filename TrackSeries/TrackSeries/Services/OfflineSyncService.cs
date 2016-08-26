@@ -12,7 +12,8 @@ namespace TrackSeries.Services
     public class OfflineSyncService : IOfflineSyncService
     {
         private MobileServiceClient client;
-        private const string MobileServiceUrl = "http://xamarinday-nodejs.azurewebsites.net";
+        
+        private readonly string MobileServiceUrl = Constants.MobileAppUrl;
         private IMobileServiceSyncTable<FavoriteShow> favoritesTable;
 
         public OfflineSyncService()
@@ -106,5 +107,14 @@ namespace TrackSeries.Services
             return favoriteShows.Any() && favoriteShows.FirstOrDefault().IsFavorite;
         }
 
+        public bool Authenticate(MobileServiceUser user)
+        {
+            if (user != null)
+            {
+                client.CurrentUser = user;
+                return true;
+            }
+            return false;
+        }
     }
 }

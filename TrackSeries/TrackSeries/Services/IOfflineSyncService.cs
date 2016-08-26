@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using TrackSeries.Models;
+using Microsoft.WindowsAzure.MobileServices;
 
 namespace TrackSeries.Services
 {
@@ -10,5 +10,6 @@ namespace TrackSeries.Services
         Task AddShow(int trackSeriesId);
         Task RemoveShow(int trackSeriesId);
         Task<bool> IsShowFavorite(int id);
+        bool Authenticate(MobileServiceUser user);
     }
 }
