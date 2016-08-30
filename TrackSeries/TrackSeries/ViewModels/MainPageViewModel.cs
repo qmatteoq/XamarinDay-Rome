@@ -19,7 +19,6 @@ namespace TrackSeries.ViewModels
         private readonly TsApiService _apiService;
         private readonly INavigationService _navigationService;
         private readonly IOfflineSyncService _offlineSyncService;
-        private readonly IEventAggregator _eventAggregator;
         private readonly IAuthenticationService _authenticationService;
         private ObservableCollection<SerieFollowersVM> _topSeries;
 
@@ -45,10 +44,9 @@ namespace TrackSeries.ViewModels
             _apiService = apiService;
             _navigationService = navigationService;
             _offlineSyncService = offlineSyncService;
-            _eventAggregator = eventAggregator;
             _authenticationService = authenticationService;
 
-            _eventAggregator.GetEvent<FavoriteChangedEvent>().Subscribe(trackSeriesId =>
+            eventAggregator.GetEvent<FavoriteChangedEvent>().Subscribe(trackSeriesId =>
             {
                 var serie = TopSeries.FirstOrDefault(x => x.Id == trackSeriesId);
                 serie.IsFavorite = !serie.IsFavorite;
@@ -63,14 +61,14 @@ namespace TrackSeries.ViewModels
         public async void OnNavigatedTo(NavigationParameters parameters)
         {
             IsLoading = true;
-            //var user = await _authenticationService.Authenticate(Constants.MobileAppUrl);
-            //bool isAuthenticated = _offlineSyncService.Authenticate(user);
-            //if (isAuthenticated)
-            //{
+            var user = await _authenticationService.Authenticate(Constants.MobileAppUrl);
+            bool isAuthenticated = _offlineSyncService.Authenticate(user);
+            if (isAuthenticated)
+            {
                 await _offlineSyncService.InitLocalStoreAsync();
                 await _offlineSyncService.SyncAsync();
                 await RefreshData();
-            //}
+            }
             IsLoading = false;
         }
 
