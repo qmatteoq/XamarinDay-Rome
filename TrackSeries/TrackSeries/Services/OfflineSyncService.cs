@@ -106,15 +106,5 @@ namespace TrackSeries.Services
             var favoriteShows = await favoritesTable.Where(x => x.TrackSeriesId == id).ToListAsync();
             return favoriteShows.Any() && favoriteShows.FirstOrDefault().IsFavorite;
         }
-
-        public bool Authenticate(MobileServiceUser user)
-        {
-            if (user != null)
-            {
-                client.CurrentUser = user;
-                return true;
-            }
-            return false;
-        }
     }
 }

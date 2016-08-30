@@ -66,7 +66,7 @@
       </behaviors:Interaction.Behaviors>
     </ListView>
 
-    <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="50"
+    <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="50" Color="Red"
                          IsRunning="{Binding Path=IsLoading}" IsVisible="{Binding Path=IsLoading}" />
 
 

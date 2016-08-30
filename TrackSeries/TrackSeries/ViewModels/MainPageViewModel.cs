@@ -8,7 +8,6 @@ using Prism.Events;
 using TrackSeries.Core.Models;
 using TrackSeries.Core.Services;
 using TrackSeries.Events;
-using TrackSeries.Models;
 using TrackSeries.Services;
 using Xamarin.Forms;
 
@@ -19,7 +18,6 @@ namespace TrackSeries.ViewModels
         private readonly TsApiService _apiService;
         private readonly INavigationService _navigationService;
         private readonly IOfflineSyncService _offlineSyncService;
-        private readonly IAuthenticationService _authenticationService;
         private ObservableCollection<SerieFollowersVM> _topSeries;
 
         public ObservableCollection<SerieFollowersVM> TopSeries
@@ -38,13 +36,11 @@ namespace TrackSeries.ViewModels
 
         public MainPageViewModel(TsApiService apiService, INavigationService navigationService,
             IOfflineSyncService offlineSyncService,
-            IEventAggregator eventAggregator,
-            IAuthenticationService authenticationService)
+            IEventAggregator eventAggregator)
         {
             _apiService = apiService;
             _navigationService = navigationService;
             _offlineSyncService = offlineSyncService;
-            _authenticationService = authenticationService;
 
             eventAggregator.GetEvent<FavoriteChangedEvent>().Subscribe(trackSeriesId =>
             {
@@ -61,15 +57,9 @@ namespace TrackSeries.ViewModels
         public async void OnNavigatedTo(NavigationParameters parameters)
         {
             IsLoading = true;
-            var user = await _authenticationService.Authenticate(Constants.MobileAppUrl);
-            bool isAuthenticated = _offlineSyncService.Authenticate(user);
-            if (isAuthenticated)
-            {
-                await _offlineSyncService.InitLocalStoreAsync();
-                await _offlineSyncService.SyncAsync();
-                await RefreshData();
-            }
-            IsLoading = false;
+            await _offlineSyncService.InitLocalStoreAsync();
+            await _offlineSyncService.SyncAsync();
+            await RefreshData();
         }
 
         private async Task RefreshData()
