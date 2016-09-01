@@ -15,7 +15,6 @@ namespace TrackSeries.ViewModels
     {
         private readonly ITsApiService _tsApiService;
         private readonly IOfflineSyncService _offlineSyncService;
-        private readonly INavigationService _navigationService;
         private readonly IEventAggregator _eventAggregator;
         private SerieInfoVM _selectedShow;
 
@@ -33,12 +32,11 @@ namespace TrackSeries.ViewModels
             set { SetProperty(ref _isFavoriteShow, value); }
         }
 
-        public DetailPageViewModel(ITsApiService tsApiService, IOfflineSyncService offlineSyncService, INavigationService navigationService,
+        public DetailPageViewModel(ITsApiService tsApiService, IOfflineSyncService offlineSyncService,
             IEventAggregator eventAggregator)
         {
             _tsApiService = tsApiService;
             _offlineSyncService = offlineSyncService;
-            _navigationService = navigationService;
             _eventAggregator = eventAggregator;
         }
 
@@ -69,12 +67,12 @@ namespace TrackSeries.ViewModels
                         await _offlineSyncService.SyncAsync();
                         if (IsFavoriteShow)
                         {
-                            await _offlineSyncService.RemoveShow(SelectedShow.Id);
+                            await _offlineSyncService.RemoveFavorite(SelectedShow.Id);
                             IsFavoriteShow = false;
                         }
                         else
                         {
-                            await _offlineSyncService.AddShow(SelectedShow.Id);
+                            await _offlineSyncService.AddFavorite(SelectedShow.Id);
                             IsFavoriteShow = true;
                         }
                         _eventAggregator.GetEvent<FavoriteChangedEvent>().Publish(SelectedShow.Id);

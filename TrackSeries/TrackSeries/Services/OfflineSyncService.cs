@@ -74,7 +74,7 @@ namespace TrackSeries.Services
             }
         }
 
-        public async Task AddShow(int trackSeriesId)
+        public async Task AddFavorite(int trackSeriesId)
         {
             var list = await favoritesTable.Where(x => x.TrackSeriesId == trackSeriesId).ToEnumerableAsync();
             var favorite = list.FirstOrDefault();
@@ -92,7 +92,7 @@ namespace TrackSeries.Services
             await SyncAsync();
         }
 
-        public async Task RemoveShow(int trackSeriesId)
+        public async Task RemoveFavorite(int trackSeriesId)
         {
             var favorites = await favoritesTable.Where(x => x.TrackSeriesId == trackSeriesId).ToEnumerableAsync();
             var favorite = favorites.FirstOrDefault();
