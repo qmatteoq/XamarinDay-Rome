@@ -7,8 +7,8 @@ namespace TrackSeries.Services
     {
         Task InitLocalStoreAsync();
         Task SyncAsync();
-        Task AddShow(int trackSeriesId);
-        Task RemoveShow(int trackSeriesId);
+        Task AddFavorite(int trackSeriesId);
+        Task RemoveFavorite(int trackSeriesId);
         Task<bool> IsShowFavorite(int id);
         bool Authenticate(MobileServiceUser user);
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,6 +52,10 @@ namespace TrackSeries.Services
                     syncErrors = exc.PushResult.Errors;
                 }
             }
+            catch (Exception exc)
+            {
+                //handle connection error
+            }
 
             // Simple error/conflict handling. 
             if (syncErrors != null)
@@ -74,7 +79,7 @@ namespace TrackSeries.Services
             }
         }
 
-        public async Task AddShow(int trackSeriesId)
+        public async Task AddFavorite(int trackSeriesId)
         {
             var list = await favoritesTable.Where(x => x.TrackSeriesId == trackSeriesId).ToEnumerableAsync();
             var favorite = list.FirstOrDefault();
@@ -88,17 +93,14 @@ namespace TrackSeries.Services
                 favorite.IsFavorite = true;
                 await favoritesTable.UpdateAsync(favorite);
             }
-            
-            await SyncAsync();
         }
 
-        public async Task RemoveShow(int trackSeriesId)
+        public async Task RemoveFavorite(int trackSeriesId)
         {
             var favorites = await favoritesTable.Where(x => x.TrackSeriesId == trackSeriesId).ToEnumerableAsync();
             var favorite = favorites.FirstOrDefault();
             favorite.IsFavorite = false;
             await favoritesTable.UpdateAsync(favorite);
-            await SyncAsync();
         }
 
         public async Task<bool> IsShowFavorite(int id)

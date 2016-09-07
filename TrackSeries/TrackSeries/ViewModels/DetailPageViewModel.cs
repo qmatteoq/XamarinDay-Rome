@@ -69,12 +69,12 @@ namespace TrackSeries.ViewModels
                         await _offlineSyncService.SyncAsync();
                         if (IsFavoriteShow)
                         {
-                            await _offlineSyncService.RemoveShow(SelectedShow.Id);
+                            await _offlineSyncService.RemoveFavorite(SelectedShow.Id);
                             IsFavoriteShow = false;
                         }
                         else
                         {
-                            await _offlineSyncService.AddShow(SelectedShow.Id);
+                            await _offlineSyncService.AddFavorite(SelectedShow.Id);
                             IsFavoriteShow = true;
                         }
                         _eventAggregator.GetEvent<FavoriteChangedEvent>().Publish(SelectedShow.Id);
