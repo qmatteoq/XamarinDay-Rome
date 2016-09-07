@@ -64,7 +64,6 @@ namespace TrackSeries.ViewModels
                 {
                     _handleFavoriteCommand = new DelegateCommand(async () =>
                     {
-                        await _offlineSyncService.SyncAsync();
                         if (IsFavoriteShow)
                         {
                             await _offlineSyncService.RemoveFavorite(SelectedShow.Id);
@@ -72,7 +71,8 @@ namespace TrackSeries.ViewModels
                         }
                         else
                         {
-                            await _offlineSyncService.AddFavorite(SelectedShow.Id);
+                            await _offlineSyncService.AddFavorite(
+                                SelectedShow.Id);
                             IsFavoriteShow = true;
                         }
                         _eventAggregator.GetEvent<FavoriteChangedEvent>().Publish(SelectedShow.Id);
