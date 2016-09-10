@@ -2,6 +2,7 @@
 Offline sync sample in a Xamarin Forms app for Xamarin Day in Rome
 
 Instructions to use it:
+
 1) Create an App Service on your Azure subscriptions
 
 2) Insert the URL of your App Service in the property <b>MobileAppUrl</b> in the class <b>TrackSeries.Models.Contants</b> in the portable <b>TrackSeries</b> project.
